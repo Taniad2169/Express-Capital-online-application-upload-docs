@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Express Capital Network Associates Application & Document Upload</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f4;
+            color: #333;
+            font-size: 1.05em;
+        }
+        .container {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.08);
+            max-width: 1100px;
+            margin: 20px auto;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 0px;
+        }
+        .header h1 {
+            font-size: 2.5em;
+            color: #000;
+            margin-top: 20px;
+            margin-bottom: 0;
+            text-transform: uppercase;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+        .note {
+            color: red;
+            font-style: italic;
+            text-align: center;
+            margin-top: 10px;
+            margin-bottom: 25px;
+            font-size: 1.2em;
+        }
+        .section-title {
+            text-align: center;
+            font-weight: bold;
+            font-size: 2em;
+            margin-top: 35px;
+            margin-bottom: 20px;
+            letter-spacing: 1px;
+        }
+        .divider {
+            border: none;
+            border-top: 2px solid #222;
+            margin-bottom: 30px;
+        }
+        .form-group {
+            margin-bottom: 18px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        .form-group label {
+            flex: 0 0 280px;
+            margin-right: 10px;
+            text-align: right;
+            font-size: 1.1em;
+        }
+        .form-group input[type="text"],
+        .form-group input[type="tel"],
+        .form-group input[type="email"],
+        .form-group input[type="date"],
+        .form-group .currency-input,
+        .form-group input[type="number"] {
+            flex: 1;
+            padding: 13px;
+            border: none;
+            border-radius: 6px;
+            min-width: 220px;
+            background-color: #BCE5F2;
+            font-size: 1.1em;
+        }
+        .currency-input {
+            display: flex;
+            align-items: center;
+            width: 100%;
+        }
+        .currency-input span {
+            padding: 13px 0px 13px 14px;
+            background-color: #BCE5F2;
+            border-right: none;
+            border-top-left-radius: 6px;
+            border-bottom-left-radius: 6px;
+            font-size: 1.1em;
+        }
+        .currency-input input {
+            flex: 1;
+            border: none;
+            border-top-left-radius: 0;
+            border-bottom-left-radius: 0;
+            background-color: #BCE5F2;
+            font-size: 1.1em;
+            padding-left: 8px;
+        }
+        .form-group .checkbox-group,
+        .form-group .radio-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 18px;
+            margin-top: 5px;
+            flex: 1;
+            min-width: 220px;
+            font-size: 1.1em;
+        }
+        .form-group .checkbox-group label,
+        .form-group .radio-group label {
+            text-align: left;
+            flex: unset;
+            margin-right: 0;
+            font-size: 1.1em;
+        }
+        .form-group .city-state-zip {
+            display: flex;
+            gap: 10px;
+            flex: 1;
+            min-width: 220px;
+        }
+        .form-group .city-state-zip input {
+            flex: 1;
+            background-color: #BCE5F2;
+            font-size: 1.1em;
+            border: none;
+            border-radius: 6px;
+            padding: 13px;
+        }
+        .full-width-input {
+            flex: 1 1 100%;
+        }
+        .form-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 18px;
+        }
+        .form-row .half-width {
+            flex: 1;
+            min-width: 320px;
+            display: flex;
+            align-items: center;
+        }
+        .form-row .half-width label {
+            flex: 0 0 170px;
+            margin-right: 10px;
+            text-align: right;
+            font-size: 1.1em;
+        }
+        .form-row .half-width input {
+            flex: 1;
+            padding: 13px;
+            border: none;
+            border-radius: 6px;
+            background-color: #BCE5F2;
+            font-size: 1.1em;
+        }
+        .footer-disclaimer {
+            font-size: 1em;
+            color: #555;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+            text-align: justify;
+            line-height: 1.5;
+        }
+        .signature-lines {
+            margin-top: 20px;
+            display: flex;
+            justify-content: space-around;
+            text-align: center;
+            width: 100%;
+        }
+        .signature-lines div {
+            flex: 1;
+            border-bottom: 1px solid #000;
+            padding-bottom: 8px;
+            margin: 0 10px;
+        }
+        .buttons-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 35px;
+        }
+        .continue-btn {
+            background-color: #0077cc;
+            color: #fff;
+            border: none;
+            border-radius: 7px;
+            font-size: 1.3em;
+            padding: 16px 54px;
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.09);
+            transition: background 0.2s;
+        }
+        .continue-btn:hover {
+            background-color: #005fa3;
+        }
+        /* Document Upload Section */
+        .upload-section {
+            margin: 32px 0 0 0;
+            padding: 25px 15px 20px 15px;
+            background: #f7fafc;
+            border: 2px dashed #2196f3;
+            border-radius: 11px;
+            display: none;
+        }
+        .upload-section.active {
+            display: block;
+        }
+        .doc-header {
+            text-align: center;
+            font-size: 1.7em;
+            font-weight: bold;
+            color: #0077cc;
+            letter-spacing: 2px;
+            margin-bottom: 0;
+            margin-top: 10px;
+        }
+        .blue-line {
+            border-top: 2px dashed #2196f3;
+            margin: 0 0 18px 0;
+        }
+        .fax-info {
+            text-align: center;
+            font-size: 1.15em;
+            margin: 18px 0 8px 0;
+        }
+        .yellow-title {
+            background: #ffeb3b;
+            color: #222;
+            font-weight: bold;
+            text-align: center;
+            font-size: 1.25em;
+            padding: 7px 0;
+            margin-bottom: 24px;
+            margin-top: 16px;
+            border-radius: 6px;
+            letter-spacing: 1px;
+        }
+        .divider-upload {
+            border: none;
+            border-top: 2px solid #222;
+            margin-bottom: 22px;
+        }
+        .checklist {
+            margin-top: 0;
+            margin-bottom: 28px;
+            font-size: 1.13em;
+        }
+        .checklist label {
+            display: block;
+            margin-bottom: 12px;
+        }
+        .form-btns {
+            display: flex;
+            gap: 28px;
+            justify-content: center;
+            margin-bottom: 15px;
+            margin-top: 18px;
+        }
+        .form-btns button, .form-btns a {
+            background: #1a85ff;
+            color: #fff;
+            border: none;
+            border-radius: 7px;
+            font-size: 1.1em;
+            padding: 13px 38px;
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.09);
+            text-decoration: none;
+            transition: background 0.16s;
+            font-family: inherit;
+        }
+        .form-btns button:hover, .form-btns a:hover {
+            background: #1565c0;
+        }
+        .instructions {
+            text-align: center;
+            margin: 10px 0 16px 0;
+            font-size: 1.07em;
+            color: #222;
+        }
+        .instructions a {
+            color: #0077cc;
+            text-decoration: underline;
+        }
+        .back-link {
+            text-align: center;
+            margin-top: 8px;
+        }
+        .back-link a {
+            color: #1313e5;
+            font-size: 1.09em;
+            text-decoration: underline;
+        }
+        .upload-title {
+            text-align: center;
+            font-weight: bold;
+            color: #1565c0;
+            margin-bottom: 13px;
+            font-size: 1.18em;
+            letter-spacing: 1px;
+        }
+        .upload-form-group {
+            text-align: center;
+            margin-bottom: 16px;
+        }
+        .upload-form-group input[type='file'] {
+            background: #BCE5F2;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            padding: 8px;
+            font-size: 1em;
+            margin-top: 7px;
+        }
+        .upload-btn {
+            background: #0077cc;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            font-size: 1.09em;
+            padding: 10px 34px;
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+            transition: background 0.2s;
+            margin-top: 12px;
+        }
+        .upload-btn:hover {
+            background: #005fa3;
+        }
+        #formStatus {
+            margin-top: 14px;
+            text-align: center;
+        }
+        @media (max-width: 900px) {
+            .container {
+                padding: 14px;
+            }
+            .form-group {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .form-group label {
+                text-align: left;
+                margin-bottom: 6px;
+                flex: unset;
+            }
+            .form-group input[type="text"],
+            .form-group input[type="tel"],
+            .form-group input[type="email"],
+            .form-group input[type="date"],
+            .form-group .currency-input {
+                width: 100%;
+                min-width: unset;
+            }
+            .currency-input input {
+                 border-left: none;
+            }
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+            .form-row .half-width {
+                width: 100%;
+                min-width: unset;
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .form-row .half-width label {
+                text-align: left;
+                margin-bottom: 8px;
+                flex: unset;
+            }
+            .type-options {
+                flex-direction: column;
+            }
+            .signature-lines {
+                flex-direction: column;
+                gap: 24px;
+            }
+            .form-btns {
+                flex-direction: column;
+                gap: 13px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>EXPRESS CAPITAL NETWORK ASSOCIATES</h1>
+        </div>
+        <p class="note">Please note, also send previous four months bank statement with completed application.</p>
+
+        <form id="loanApplicationForm" autocomplete="off">
+            <div class="section-title">BUSINESS INFORMATION</div>
+            <hr class="divider">
+            <div class="form-group">
+                <label for="legalCorporateName">Legal Corporate Name:</label>
+                <input type="text" id="legalCorporateName" name="legalCorporateName">
+            </div>
+            <div class="form-group">
+                <label for="dba">DBA (Doing Business As):</label>
+                <input type="text" id="dba" name="dba">
+            </div>
+            <div class="form-group">
+                <label for="physicalAddress">Physical Address:</label>
+                <input type="text" id="physicalAddress" name="physicalAddress">
+            </div>
+            <div class="form-group">
+                <label></label>
+                <div class="city-state-zip">
+                    <input type="text" id="city" name="city" placeholder="City">
+                    <input type="text" id="state" name="state" placeholder="State">
+                    <input type="text" id="zip" name="zip" placeholder="Zip">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="telephoneNumber">Telephone Number:</label>
+                <input type="tel" id="telephoneNumber" name="telephoneNumber">
+            </div>
+            <div class="form-group">
+                <label for="faxNumber">Fax Number:</label>
+                <input type="tel" id="faxNumber" name="faxNumber">
+            </div>
+            <div class="form-group">
+                <label for="federalTaxId">Federal Tax ID:</label>
+                <input type="text" id="federalTaxId" name="federalTaxId">
+            </div>
+            <div class="form-group">
+                <label for="dateBusinessStarted">Date Business Started:</label>
+                <input type="date" id="dateBusinessStarted" name="dateBusinessStarted">
+            </div>
+            <div class="form-group">
+                <label for="website">Website:</label>
+                <input type="text" id="website" name="website">
+            </div>
+            <div class="form-group">
+                <label>Type of Entity (circle one):</label>
+                <div class="type-options radio-group">
+                    <label><input type="radio" name="entityType" value="Sole Proprietor"> Sole Proprietor</label>
+                    <label><input type="radio" name="entityType" value="Partnership"> Partnership</label>
+                    <label><input type="radio" name="entityType" value="Corporation"> Corporation</label>
+                    <label><input type="radio" name="entityType" value="LLC"> LLC</label>
+                    <label><input type="radio" name="entityType" value="Other"> Other</label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="emailAddress">Email Address:</label>
+                <input type="email" id="emailAddress" name="emailAddress">
+            </div>
+            <div class="form-group">
+                <label>Type of Business (circle all that apply):</label>
+                <div class="type-options checkbox-group">
+                    <label><input type="checkbox" name="businessType" value="Retail"> Retail</label>
+                    <label><input type="checkbox" name="businessType" value="MO / TO"> MO / TO</label>
+                    <label><input type="checkbox" name="businessType" value="Wholesale"> Wholesale</label>
+                    <label><input type="checkbox" name="businessType" value="Restaurant"> Restaurant</label>
+                    <label><input type="checkbox" name="businessType" value="Supermarket"> Supermarket</label>
+                    <label><input type="checkbox" name="businessType" value="Other"> Other</label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="productServiceSold">Product/Service Sold:</label>
+                <input type="text" id="productServiceSold" name="productServiceSold">
+            </div>
+            <div class="form-group">
+                <label for="monthlyGrossIncome">Monthly Gross Income:</label>
+                <div class="currency-input">
+                    <span>$</span>
+                    <input type="text" id="monthlyGrossIncome" name="monthlyGrossIncome" placeholder="Enter amount">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="fundingAmountRequest">Funding Amount Request:</label>
+                <div class="currency-input">
+                    <span>$</span>
+                    <input type="text" id="fundingAmountRequest" name="fundingAmountRequest" placeholder="Enter amount">
+                </div>
+            </div>
+
+            <div class="section-title">MERCHANT/OWNER INFORMATION</div>
+            <hr class="divider">
+            <div class="form-row">
+                <div class="half-width">
+                    <label for="corporateOwnerName">Corporate Office/Owner Name:</label>
+                    <input type="text" id="corporateOwnerName" name="corporateOwnerName">
+                </div>
+                <div class="half-width">
+                    <label for="ownerTitle">Title:</label>
+                    <input type="text" id="ownerTitle" name="ownerTitle">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="ownershipPercentage">Ownership Percentage:</label>
+                <input type="text" id="ownershipPercentage" name="ownershipPercentage" style="flex: 0 0 100px;"> %
+            </div>
+            <div class="form-group">
+                <label for="ownerHomeAddress">Home Address:</label>
+                <input type="text" id="ownerHomeAddress" name="ownerHomeAddress">
+            </div>
+            <div class="form-group">
+                <label></label>
+                <div class="city-state-zip">
+                    <input type="text" id="ownerCity" name="ownerCity" placeholder="City">
+                    <input type="text" id="ownerState" name="ownerState" placeholder="State">
+                    <input type="text" id="ownerZip" name="ownerZip" placeholder="Zip">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="ownerSsn">Social Security Number (SSN):</label>
+                <input type="text" id="ownerSsn" name="ownerSsn">
+            </div>
+            <div class="form-group">
+                <label for="ownerDob">Date of Birth:</label>
+                <input type="date" id="ownerDob" name="ownerDob">
+            </div>
+            <div class="form-group">
+                <label for="ownerFico">FICO Score:</label>
+                <input type="text" id="ownerFico" name="ownerFico">
+            </div>
+            <div class="form-group">
+                <label for="ownerCellNumber">Cell Number:</label>
+                <input type="tel" id="ownerCellNumber" name="ownerCellNumber">
+            </div>
+
+            <div class="section-title">PARTNER INFORMATION</div>
+            <hr class="divider">
+            <div class="form-row">
+                <div class="half-width">
+                    <label for="partnerName1">Partner Name:</label>
+                    <input type="text" id="partnerName1" name="partnerName1">
+                </div>
+                <div class="half-width">
+                    <label for="partnerTitle1">Title:</label>
+                    <input type="text" id="partnerTitle1" name="partnerTitle1">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="partnerOwnershipPercentage1">Ownership Percentage:</label>
+                <input type="text" id="partnerOwnershipPercentage1" name="partnerOwnershipPercentage1" style="flex: 0 0 100px;"> %
+            </div>
+            <div class="form-group">
+                <label for="partnerHomeAddress1">Home Address:</label>
+                <input type="text" id="partnerHomeAddress1" name="partnerHomeAddress1">
+            </div>
+            <div class="form-group">
+                <label></label>
+                <div class="city-state-zip">
+                    <input type="text" id="partnerCity1" name="partnerCity1" placeholder="City">
+                    <input type="text" id="partnerState1" name="partnerState1" placeholder="State">
+                    <input type="text" id="partnerZip1" name="partnerZip1" placeholder="Zip">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="partnerSsn1">Social Security Number (SSN):</label>
+                <input type="text" id="partnerSsn1" name="partnerSsn1">
+            </div>
+            <div class="form-group">
+                <label for="partnerDob1">Date of Birth:</label>
+                <input type="date" id="partnerDob1" name="partnerDob1">
+            </div>
+            <div class="form-group">
+                <label for="partnerFico1">FICO Score:</label>
+                <input type="text" id="partnerFico1" name="partnerFico1">
+            </div>
+            <div class="form-group">
+                <label for="partnerCellNumber1">Cell Number:</label>
+                <input type="tel" id="partnerCellNumber1" name="partnerCellNumber1">
+            </div>
+
+            <div class="buttons-container">
+                <button type="button" class="continue-btn" onclick="showUploadSection()">Continue to Document Upload</button>
+            </div>
+        </form>
+
+        <div class="footer-disclaimer">
+            <p>
+                By signing above, each of the above listed business and business owner/officer (individually and collectively, “you”) authorize Express Capital Network Associates and its agents, banks or financial institutions to obtain an investigative or consumer report from a credit bureau or a credit agency and to investigate the references given on any other statements or data obtained from applicant. You also authorize Express Capital Network Associates to transmit this application form, with any of the foregoing information obtained in connection with this application, to any or all of the Recipients for the foregoing purposes. You also consent to the release, by any creditor or financial institution, of any information relating to any of you, to Express Capital Network Associates and to each of the Recipients, on its own behalf. I am providing my business cell-phone and business e-mail address and hereby consent to the receipt of correspondence/messages regarding transactions with Express Capital Network Associates and/or its affiliates on either medium. I certify that all the information contained herein is complete, true and accurate.
+            </p>
+            <div class="signature-lines">
+                <div></div>
+                <div></div>
+            </div>
+        </div>
+
+        <!-- Document Upload Section (hidden until Continue is clicked) -->
+        <div class="upload-section" id="uploadSection">
+            <div class="blue-line"></div>
+            <div class="doc-header">Additional Documents</div>
+            <div class="blue-line"></div>
+            <div class="fax-info">
+                <b>Fax your document to:</b> (646) 448-8202
+            </div>
+            <div class="yellow-title">ADDITIONAL DOCUMENTS REQUIRED</div>
+            <hr class="divider-upload">
+            <form class="checklist">
+                <label><input type="checkbox" disabled> 4 recent months of business bank statements</label>
+                <label><input type="checkbox" disabled> Copy of drivers license</label>
+                <label><input type="checkbox" disabled> Voided business check</label>
+            </form>
+            <div class="form-btns">
+                <button type="button" onclick="submitApplication()">Submit Application</button>
+                <button type="button" onclick="window.print()">Print Form</button>
+                <a href="#" onclick="downloadPDF()">Download as PDF</a>
+            </div>
+            <div class="instructions">
+                To email your completed application, first download as PDF, then attach the file to your email to:
+                <a href="mailto:franz@expresscapitalassociate.com">franz@expresscapitalassociate.com</a>
+            </div>
+            <div class="back-link">
+                <a href="#" onclick="hideUploadSection()">&larr; Back to Application</a>
+            </div>
+            <div class="upload-title">Securely Upload Your Documents Here</div>
+            <form action="https://formbold.com/s/3pOkY" method="POST" enctype="multipart/form-data" id="docUploadForm">
+                <div class="upload-form-group">
+                    <label for="email">Your Email (for confirmation):</label><br>
+                    <input type="email" name="email" id="email" required>
+                </div>
+                <div class="upload-form-group">
+                    <label for="file">Attach documents (PDF, JPG, PNG):</label><br>
+                    <input type="file" name="file" id="file" multiple accept=".pdf,.jpg,.jpeg,.png" required>
+                </div>
+                <div class="upload-form-group">
+                    <label for="message">Message (optional):</label><br>
+                    <textarea name="message" id="message" rows="3" style="width:90%;max-width:400px;"></textarea>
+                </div>
+                <button class="upload-btn" type="submit">Upload Documents</button>
+                <div id="formStatus"></div>
+            </form>
+        </div>
+    </div>
+    <script>
+        function showUploadSection() {
+            document.getElementById('uploadSection').classList.add('active');
+            window.scrollTo({ top: document.getElementById('uploadSection').offsetTop, behavior: 'smooth' });
+        }
+        function hideUploadSection() {
+            document.getElementById('uploadSection').classList.remove('active');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+        function submitApplication() {
+            alert('Please complete the application form first and download as PDF before submitting documents.');
+        }
+        function downloadPDF() {
+            alert('PDF download functionality coming soon!');
+        }
+        document.getElementById('docUploadForm').onsubmit = function(e) {
+            var email = document.getElementById('email').value.trim();
+            var fileInput = document.getElementById('file');
+            if (!email || !fileInput.files.length) {
+                e.preventDefault();
+                document.getElementById('formStatus').innerHTML = '<span style="color:red;">Please enter your email and attach documents.</span>';
+                return false;
+            }
+            for (var i = 0; i < fileInput.files.length; i++) {
+                var f = fileInput.files[i];
+                if (!['application/pdf', 'image/jpeg', 'image/png'].includes(f.type)) {
+                    e.preventDefault();
+                    document.getElementById('formStatus').innerHTML = '<span style="color:red;">Files must be PDF, JPG, or PNG.</span>';
+                    return false;
+                }
+            }
+            document.getElementById('formStatus').innerHTML = '<span style="color:green;">Uploading, please wait...</span>';
+        }
+    </script>
+</body>
+</html>
